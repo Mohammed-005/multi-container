@@ -1,0 +1,14 @@
+services:
+  web:
+    build: .
+    container_name: python-app
+    ports:
+      - "8000:8000"
+    environment:
+      - REDIS_HOST=redis
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:7-alpine
+    container_name: redis server

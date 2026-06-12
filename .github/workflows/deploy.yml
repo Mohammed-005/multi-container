@@ -1,0 +1,54 @@
+name: Health-API with Redis count
+
+on:
+  push:
+    branches: [ main ]
+
+env:
+  AWS_REGION: aap-southeast-2
+  IMAGE_TAG: v4
+  ECR_REPOSITORY: health-api
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout the Code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build and Push the Image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        run: |
+          docker build --no-cache -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+
+      - name: Deploy to EC2 via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with: 
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+        script: |
+          aws ecr get-login-password --region ap-southeast-2 | docker login --username AWS --password-stdin 337405469571.dkr.ecr.ap-southeast-2.amazonaws.com
+
+          docker pull 337405469571.dkr.ecr.ap-southeast-2.amazonaws.com/health-api:v4
+
+          docker stop health-app || true
+          docker rm health-app || true
+          docker stop ci-cd-pipeline || true
+          docker rm ci-cd-pipeline || true
+
+          docker run -d -p 8000:8000 --name health-api-redis 337405469571.dkr.ecr.ap-southeast-2.amazonaws.com/health-api:v4 
