@@ -1,9 +1,9 @@
 services:
   web:
-    image: 337405469571.dkr.ecr.ap-southeast-2.amazonaws.com/health-api:v4
-    container_name: python-app
+    image: 337405469571.dkr.ecr.ap-southeast-2.amazonaws.com/health-api:v4  # <--- Make sure this matches your new repo and tag!
+    container_name: web-app
     ports:
-      - "8000:8000"
+      - "80:8000"  # This maps public port 80 to your Python app's port 8000
     environment:
       - REDIS_HOST=redis
     depends_on:
