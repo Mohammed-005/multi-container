@@ -26,7 +26,7 @@ class Handler(BaseHTTPRequestHandler):
 
         else:
             self.send_response(404)
-            self.send_headers()
+            self.end_headers()
 
 server = HTTPServer(("0.0.0.0", PORT), Handler)
 print(f"Server running on port {PORT}")

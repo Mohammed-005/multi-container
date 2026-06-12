@@ -1,6 +1,6 @@
 services:
   web:
-    image: 337405469571.dkr.ecr.ap-southeast-2.amazonaws.com/health-api
+    image: 337405469571.dkr.ecr.ap-southeast-2.amazonaws.com/health-api:v4
     container_name: python-app
     ports:
       - "8000:8000"
