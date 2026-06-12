@@ -44,9 +44,9 @@ jobs:
           script: |
 
             aws ecr get-login-password --region ap-southeast-2 | docker login --username AWS --password-stdin 337405469571.dkr.ecr.ap-southeast-2.amazonaws.com
+            docker stop ci-cd-pipeline || true
+            docker rm ci-cd-pipeline || true
 
             docker-compose down
-
             docker-compose pull
-
             docker-compose up -d
