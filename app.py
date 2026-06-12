@@ -7,7 +7,7 @@ PORT = 8000
 
 REDIS_HOST = os.environ.get("REDIS_HOST", "redis")
 
-r = redis.Redis(host=REDIS_HOST, port=6379, decode_response=True)
+r = redis.Redis(host=REDIS_HOST, port=6379, decode_responses=True)
 
 class Handler(BaseHTTPRequestHandler):
     def do_GET(self):
