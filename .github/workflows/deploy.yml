@@ -56,6 +56,9 @@ jobs:
             docker stop ci-cd-pipeline || true
             docker rm ci-cd-pipeline || true
 
-            docker-compose down
+            docker stop web-app || true
+            docker rm web-app || true
+
+            docker-compose down --remove-orphans
             docker-compose pull
             docker-compose up -d
