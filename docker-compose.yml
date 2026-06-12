@@ -1,6 +1,6 @@
 services:
   web:
-    build: .
+    image: 337405469571.dkr.ecr.ap-southeast-2.amazonaws.com/health-api
     container_name: python-app
     ports:
       - "8000:8000"
@@ -11,4 +11,4 @@ services:
 
   redis:
     image: redis:7-alpine
-    container_name: redis server
+    container_name: redis-server
