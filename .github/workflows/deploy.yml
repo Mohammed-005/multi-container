@@ -42,10 +42,9 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
+            cd ~/app
+
             aws ecr get-login-password --region ap-southeast-2 | docker login --username AWS --password-stdin 337405469571.dkr.ecr.ap-southeast-2.amazonaws.com
-            docker pull 337405469571.dkr.ecr.ap-southeast-2.amazonaws.com/health-api:v4
+            docker-compose pull
 
-            docker stop 337405469571.dkr.ecr.ap-southeast-2.amazonaws.com/graduation-app:v3
-            docker rm 337405469571.dkr.ecr.ap-southeast-2.amazonaws.com/graduation-app:v3
-
-            docker run -d -p 8000:8000 --name health-api 337405469571.dkr.ecr.ap-southeast-2.amazonaws.com/health-api:v4
+            docker-compose up -d
